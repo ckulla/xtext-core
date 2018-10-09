@@ -112,6 +112,7 @@ import static org.eclipse.xtext.diagnostics.Severity.*
 	@Inject extension IResourceServiceProvider.Registry languagesRegistry
 	@Inject ExecutableCommandRegistry commandRegistry
 	@Inject SemanticHighlightingRegistry semanticHighlightingRegistry
+	@Inject ILanguageServerExitHandler exitHandler
 	
 	// injected below
 	WorkspaceManager workspaceManager
@@ -222,9 +223,9 @@ import static org.eclipse.xtext.diagnostics.Severity.*
 
 	override exit() {
 		if(this.hasShutdownBeenCalled) {
-			System.exit(0);
+			exitHandler.exit(0);
 		} else {
-			System.exit(1);
+			exitHandler.exit(1);
 		}
 	}
 

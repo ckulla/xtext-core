@@ -100,6 +100,7 @@ import org.eclipse.xtext.ide.server.BuildManager;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ICapabilitiesContributor;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
+import org.eclipse.xtext.ide.server.ILanguageServerExitHandler;
 import org.eclipse.xtext.ide.server.ILanguageServerExtension;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.WorkspaceManager;
@@ -190,6 +191,9 @@ public class LanguageServerImpl implements LanguageServer, WorkspaceService, Tex
   
   @Inject
   private SemanticHighlightingRegistry semanticHighlightingRegistry;
+  
+  @Inject
+  private ILanguageServerExitHandler exitHandler;
   
   private WorkspaceManager workspaceManager;
   
@@ -355,9 +359,9 @@ public class LanguageServerImpl implements LanguageServer, WorkspaceService, Tex
   @Override
   public void exit() {
     if (this.hasShutdownBeenCalled) {
-      System.exit(0);
+      this.exitHandler.exit(0);
     } else {
-      System.exit(1);
+      this.exitHandler.exit(1);
     }
   }
   
