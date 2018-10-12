@@ -57,11 +57,21 @@ def upstream_branch (jobName, branch) {
   if (grgit.branch.current().trackingBranch != null) {
     branch_candidates << grgit.branch.current().trackingBranch.name
   }
-  
+  logger.error "$System.env.BRANCH_NAME"
+  branch_candidates << "$System.env.BRANCH_NAME"
+
+  logger.error ("branch_candidates" + branch_candidates)
   def selectedBranch = branch_candidates.find { candidate -> url_exists(new URL("$JENKINS_URL/job/$jobName/job/$candidate/$MVN_REPOPATH")) }
   if (selectedBranch == null) {
-    // fallback
-    selectedBranch = 'master'
+    def fromEnv = "$System.env.BRANCH_NAME"
+    logger.error("fromEnv " + fromEnv)
+    if (myString?.trim()) {
+      selectedBranch = "$fromEnv"
+    } else {
+      logger.error "fallback master"
+      selectedBranch = 'master'
+    }  
+    logger.error("selectedBranch " + selectedBranch)
   }
   logger.info "[$project.name $jobName] Using upstream branch $selectedBranch (autodetect)"
   return selectedBranch
